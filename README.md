@@ -4,7 +4,7 @@ Author: **M Ikhsan Febrian**
 
 | | URL |
 | --- | --- |
-| 🛍️ Live frontend (Vercel) | **FRONTEND_URL_PLACEHOLDER** |
+| 🛍️ Live frontend (Vercel) | **https://revoshop-frontend.vercel.app** |
 | ⚙️ Live API (Flask on Vercel + Supabase Postgres) | https://module-2-sann02-hvbj.vercel.app |
 
 | Checkpoint | What | Where |
@@ -143,8 +143,8 @@ Demo admin from the seed data: `admin@email.com` / `admin123`. Customers can reg
 npx playwright install chromium       # once (or set PLAYWRIGHT_CHANNEL=msedge / chrome)
 
 # A) Against the live Vercel deployment
-PLAYWRIGHT_BASE_URL=FRONTEND_URL_PLACEHOLDER npm run test:e2e
-#    PowerShell: $env:PLAYWRIGHT_BASE_URL="FRONTEND_URL_PLACEHOLDER"; npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://revoshop-frontend.vercel.app npm run test:e2e
+#    PowerShell: $env:PLAYWRIGHT_BASE_URL="https://revoshop-frontend.vercel.app"; npm run test:e2e
 
 # B) Locally: build first; the config starts `next start` on port 3100
 npm run build
@@ -160,6 +160,11 @@ users, products and categories. Products and categories are deleted again at the
 | `auth.spec.ts` | RegisterForm's 4 validation rules, register → `/` + refresh keeps the username, duplicate email, login 401 banner, empty-field errors, customer → `/` and blocked from `/dashboard*` |
 | `cart-checkout.spec.ts` | empty state + disabled checkout, add with quantity, persistence across refresh, remove, checkout → `POST /orders` → cart cleared → `/orders` → order detail |
 | `admin.spec.ts` | admin → `/dashboard`, product validate/create/edit/delete, **409 delete guard**, category validate/create/edit/delete + **linked-products guard**, all-orders overview |
+
+**Production run** against `https://revoshop-frontend.vercel.app` (Chromium/Edge, 1 worker):
+**23 passed**, 0 failed. The product CRUD test passed on its automatic retry after a slow
+first API response, which the config's `retries: 2` absorbs. The 3 skipped tests are
+`screenshots.spec.ts`, which only runs with `CAPTURE_SCREENSHOTS=1`.
 
 The guard tests use seeded data: "Keyboard Mechanical" is in a pending order, and "Elektronik"
 has products. Override them with `E2E_GUARDED_PRODUCT` / `E2E_GUARDED_CATEGORY` and the admin
